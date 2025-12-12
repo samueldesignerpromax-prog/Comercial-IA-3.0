@@ -1,367 +1,41 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gerador de Vídeo IA - Pollo.ai</title>
-  <style>
-    body {
-      background: linear-gradient(135deg, #0a0f24, #1a237e);
-      color: white;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      text-align: center;
-      padding: 20px;
-      min-height: 100vh;
-    }
-    
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    
-    h1 {
-      color: #00c3ff;
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      text-shadow: 0 0 10px rgba(0, 195, 255, 0.5);
-    }
-    
-    .api-status {
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 10px;
-      padding: 15px;
-      margin: 20px auto;
-      max-width: 600px;
-      border-left: 4px solid #4CAF50;
-    }
-    
-    .api-key {
-      font-family: monospace;
-      background: rgba(0, 0, 0, 0.5);
-      padding: 8px 12px;
-      border-radius: 5px;
-      margin: 10px 0;
-      color: #4CAF50;
-      font-size: 0.9rem;
-      word-break: break-all;
-    }
-    
-    .btn {
-      background: linear-gradient(45deg, #0d6efd, #00c3ff);
-      color: white;
-      padding: 15px 30px;
-      border-radius: 50px;
-      border: none;
-      cursor: pointer;
-      font-size: 1.1rem;
-      font-weight: bold;
-      margin: 15px;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(13, 110, 253, 0.4);
-    }
-    
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0, 195, 255, 0.6);
-    }
-    
-    .btn:active {
-      transform: translateY(-1px);
-    }
-    
-    .btn-fallback {
-      background: linear-gradient(45deg, #ff9800, #ff5722);
-    }
-    
-    #status {
-      margin: 25px auto;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 10px;
-      min-height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-    }
-    
-    video {
-      width: 100%;
-      max-width: 800px;
-      border-radius: 10px;
-      border: 3px solid #00c3ff;
-      box-shadow: 0 0 30px rgba(0, 195, 255, 0.3);
-      margin: 20px auto;
-      display: block;
-      background: #000;
-    }
-    
-    .download-section {
-      margin-top: 30px;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 10px;
-    }
-    
-    .hidden {
-      display: none;
-    }
-    
-    .error {
-      color: #ff5252;
-      background: rgba(255, 82, 82, 0.1);
-      border-left: 4px solid #ff5252;
-    }
-    
-    .success {
-      color: #4CAF50;
-      background: rgba(76, 175, 80, 0.1);
-      border-left: 4px solid #4CAF50;
-    }
-    
-    .cors-warning {
-      background: rgba(255, 193, 7, 0.1);
-      border-left: 4px solid #ffc107;
-      color: #ffc107;
-      padding: 15px;
-      border-radius: 10px;
-      margin: 20px 0;
-      text-align: left;
-    }
-    
-    @media (max-width: 768px) {
-      h1 { font-size: 2rem; }
-      .btn { padding: 12px 24px; font-size: 1rem; }
-      video { width: 95%; }
-    }
-  </style>
-</head>
 <body>
-  <div class="container">
-    <h1>🎬 Gerador de Vídeo IA - Pollo.ai</h1>
-    <p>Teste da API com sua chave real</p>
-    
-    <div class="api-status">
-      <h3>✅ API Key Configurada</h3>
-      <div class="api-key">pollo_1rCUxshDhx97hBHyzKBHgc2JSg6lVS4insiEFmLowFo0</div>
-      <p>Status: <span id="apiStatusText">Pronto para testar</span></p>
-    </div>
-    
-    <div class="cors-warning">
-      <strong>⚠️ IMPORTANTE:</strong> A API pode bloquear requests direto do navegador (CORS).<br>
-      Se não funcionar, você precisa hospedar este site em um servidor (GitHub Pages, Netlify, etc.).
-    </div>
-    
-    <button class="btn" onclick="gerarVideoIA()" id="btnGerar">
-      🚀 Gerar Vídeo com IA
-    </button>
-    
-    <button class="btn btn-fallback" onclick="usarVideoExemplo()">
-      📹 Usar Vídeo de Exemplo
-    </button>
-    
-    <div id="status">
-      Clique em um botão acima para começar
-    </div>
-    
-    <video id="videoPlayer" controls class="hidden"></video>
-    
-    <div class="download-section hidden" id="downloadSection">
-      <h3>📥 Download do Vídeo</h3>
-      <button class="btn" onclick="baixarVideo()" id="btnDownload">
-        💾 Baixar Vídeo
-      </button>
-      <p id="videoInfo"></p>
-    </div>
-    
-    <div id="debugInfo" style="text-align: left; margin-top: 30px; font-size: 0.9rem; color: #aaa; display: none;">
-      <h4>🔍 Informações de Debug:</h4>
-      <pre id="debugText"></pre>
-    </div>
-  </div>
 
-  <script>
-    // SUA NOVA API KEY
-    const API_KEY = "pollo_1rCUxshDhx97hBHyzKBHgc2JSg6lVS4insiEFmLowFo0";
-    let videoUrlAtual = "";
-    
-    async function gerarVideoIA() {
-      const status = document.getElementById("status");
-      const videoPlayer = document.getElementById("videoPlayer");
-      const btnGerar = document.getElementById("btnGerar");
-      const debugInfo = document.getElementById("debugInfo");
-      const debugText = document.getElementById("debugText");
-      
-      // Reset
-      status.className = "";
-      status.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;"><span style="margin-right:10px;">🔄</span> Conectando à API Pollo.ai...</div>';
-      videoPlayer.classList.add("hidden");
-      videoUrlAtual = "";
-      btnGerar.disabled = true;
-      btnGerar.innerHTML = "⏳ Processando...";
-      
-      debugInfo.style.display = "block";
-      debugText.textContent = "Iniciando requisição para Pollo.ai API...";
-      
-      try {
-        // Primeiro, testar se a API está acessível
-        debugText.textContent += "\n\n1. Testando conexão com a API...";
-        
-        const testeConexao = await fetch("https://pollo.ai/api/health", {
-          method: "GET",
-          headers: {
-            "x-api-key": API_KEY
-          }
-        }).catch(e => {
-          debugText.textContent += "\n❌ Erro na conexão: " + e.message;
-          return null;
-        });
-        
-        if (testeConexao && testeConexao.ok) {
-          debugText.textContent += "\n✅ Conexão com API estabelecida!";
-        } else {
-          debugText.textContent += "\n⚠️ Não foi possível testar conexão direta";
-        }
-        
-        // Agora tentar gerar o vídeo
-        debugText.textContent += "\n\n2. Enviando requisição para gerar vídeo...";
-        status.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;"><span style="margin-right:10px;">🎬</span> Gerando vídeo IA (20-40 segundos)...</div>';
-        
-        const response = await fetch("https://pollo.ai/api/platform/generation/pika/pika-v2-2", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": API_KEY
-          },
-          body: JSON.stringify({
-            input: {
-              prompt: `Avatar masculino jovem futurista, olhos azuis brilhantes, 
-                      cabelo moderno, roupa tecnológica, fundo holográfico com partículas flutuantes,
-                      iluminação neon azul e roxa, alta qualidade, animação suave.
-                      
-                      NARRATIVA: "Bem-vindo à era da inteligência artificial. 
-                      Transforme seu negócio com tecnologia de ponta. 
-                      Samuel Designer Pro Max - inovação que impulsiona resultados."`,
-              aspect_ratio: "16:9",
-              model: "pika-v2-2"
-            }
-          })
-        });
-        
-        debugText.textContent += "\n✅ Requisição enviada. Status: " + response.status;
-        
-        if (!response.ok) {
-          throw new Error(`Erro HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        debugText.textContent += "\n\n3. Resposta da API recebida:";
-        debugText.textContent += "\n" + JSON.stringify(data, null, 2);
-        
-        if (data.output && data.output[0] && data.output[0].uri) {
-          videoUrlAtual = data.output[0].uri;
-          
-          status.className = "success";
-          status.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;"><span style="margin-right:10px;">✅</span> Vídeo gerado com sucesso!</div>';
-          
-          videoPlayer.src = videoUrlAtual;
-          videoPlayer.classList.remove("hidden");
-          
-          document.getElementById("downloadSection").classList.remove("hidden");
-          document.getElementById("videoInfo").textContent = `URL: ${videoUrlAtual.substring(0, 50)}...`;
-          
-          debugText.textContent += "\n\n✅ VÍDEO GERADO: " + videoUrlAtual;
-          
-        } else {
-          status.className = "error";
-          status.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;"><span style="margin-right:10px;">❌</span> API respondeu mas não retornou vídeo.</div>';
-          debugText.textContent += "\n❌ API não retornou URI do vídeo";
-        }
-        
-      } catch (error) {
-        console.error("Erro detalhado:", error);
-        
-        status.className = "error";
-        status.innerHTML = `<div style="text-align:center;">
-          <div style="margin-bottom:10px;">❌ Erro ao conectar com a API</div>
-          <div style="font-size:0.9rem;color:#ff9999;">${error.message}</div>
-          <div style="margin-top:15px;font-size:0.9rem;">
-            <strong>Possíveis causas:</strong><br>
-            1. Bloqueio CORS (hospede o site)<br>
-            2. API Key inválida ou sem créditos<br>
-            3. API temporariamente indisponível
-          </div>
-        </div>`;
-        
-        debugText.textContent += "\n\n❌ ERRO CAPTURADO: " + error.message;
-        debugText.textContent += "\nStack: " + error.stack;
-      } finally {
-        btnGerar.disabled = false;
-        btnGerar.innerHTML = "🚀 Gerar Vídeo com IA";
+<button onclick="gerarVideo()">Gerar Vídeo IA Futurista</button>
+
+<script>
+async function gerarVideo() {
+  const response = await fetch("https://pollo.ai/api/platform/generation/pika/pika-v2-2", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": "pollo_HyCDDN4uWbEKYbDy9cmJZ7D1U6D6ZN9xse4rPoMSHHI6"
+    },
+    body: JSON.stringify({
+      input: {
+        prompt: `
+Homem futurista realista com pele metálica brilhante, olhos neon azul,
+linhas tecnológicas no rosto, fundo tecnológico neon roxo e azul,
+animação suave, estilo IA avançada.
+
+Narração: "Bem-vindo ao futuro da inteligência artificial.
+Eu fui criado para apresentar a nova geração de vídeos feitos por IA.
+Avatar realista, animação suave, voz automática e alta definição.
+Com tecnologia avançada, você pode criar comerciais, anúncios e vídeos profissionais usando apenas código.
+O futuro já chegou. E começa agora."
+        `,
+        aspect_ratio: "16:9"
       }
-    }
-    
-    function usarVideoExemplo() {
-      const status = document.getElementById("status");
-      const videoPlayer = document.getElementById("videoPlayer");
-      const downloadSection = document.getElementById("downloadSection");
-      const videoInfo = document.getElementById("videoInfo");
-      const debugInfo = document.getElementById("debugInfo");
-      const debugText = document.getElementById("debugText");
-      
-      // Vídeo de exemplo público
-      videoUrlAtual = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
-      
-      status.className = "success";
-      status.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;"><span style="margin-right:10px;">🎥</span> Usando vídeo de exemplo</div>';
-      
-      videoPlayer.src = videoUrlAtual;
-      videoPlayer.classList.remove("hidden");
-      
-      downloadSection.classList.remove("hidden");
-      videoInfo.textContent = "Vídeo de exemplo (Big Buck Bunny - Domínio Público)";
-      
-      debugInfo.style.display = "block";
-      debugText.textContent = "Usando vídeo de exemplo (fallback)\nURL: " + videoUrlAtual;
-    }
-    
-    function baixarVideo() {
-      if (!videoUrlAtual) {
-        alert("Nenhum vídeo disponível para download!");
-        return;
-      }
-      
-      const link = document.createElement('a');
-      link.href = videoUrlAtual;
-      
-      // Gerar nome do arquivo
-      const nomeArquivo = videoUrlAtual.includes('example') 
-        ? 'video-exemplo-ia.mp4'
-        : `video-ia-${Date.now()}.mp4`;
-      
-      link.download = nomeArquivo;
-      link.target = '_blank';
-      
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      // Feedback visual
-      const btnDownload = document.getElementById("btnDownload");
-      const originalText = btnDownload.innerHTML;
-      btnDownload.innerHTML = "✅ Download Iniciado!";
-      
-      setTimeout(() => {
-        btnDownload.innerHTML = originalText;
-      }, 2000);
-    }
-    
-    // Teste automático ao carregar
-    window.addEventListener('load', () => {
-      document.getElementById("apiStatusText").textContent = "API Key carregada com sucesso";
-      console.log("API Key carregada:", API_KEY.substring(0, 20) + "...");
-    });
-  </script>
+    })
+  });
+
+  const data = await response.json();
+  console.log(data);
+
+  alert("Vídeo gerado! Veja o link no console.");
+}
+</script>
+
 </body>
 </html>
